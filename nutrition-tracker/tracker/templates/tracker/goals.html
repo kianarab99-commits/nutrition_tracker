@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}Set Goals{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0">🎯 Set Daily Nutrition Goals</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <h5>Recommended Daily Values</h5>
+                        <p class="text-muted">
+                            Based on average adult needs. Adjust according to your activity level and goals.
+                        </p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h3>🔥 Calories</h3>
+                                    {{ form.daily_calorie_goal }}
+                                    <p class="text-muted mt-2">
+                                        Average: 2000-2500 for adults
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h3>💪 Protein</h3>
+                                    {{ form.daily_protein_goal }}
+                                    <p class="text-muted mt-2">
+                                        0.8g per kg of body weight
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h3>🌾 Carbs</h3>
+                                    {{ form.daily_carbs_goal }}
+                                    <p class="text-muted mt-2">
+                                        45-65% of total calories
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h3>🥑 Fat</h3>
+                                    {{ form.daily_fat_goal }}
+                                    <p class="text-muted mt-2">
+                                        20-35% of total calories
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-warning btn-lg">
+                            Save Goals
+                        </button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary btn-lg">
+                            Back to Dashboard
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

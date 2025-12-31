@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Welcome Section -->
+    <div class="col-12 mb-4">
+        <div class="card shadow">
+            <div class="card-body">
+                <h2 class="card-title">Welcome, {{ user.username }}!</h2>
+                <p class="text-muted">{{ today|date:"F d, Y" }}</p>
+                
+                <div class="row mt-3">
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'add_meal' %}" class="btn btn-success w-100">
+                            ➕ Add Meal
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'goals' %}" class="btn btn-outline-success w-100">
+                            🎯 Set Goals
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'bmi' %}" class="btn btn-outline-primary w-100">
+                            ⚖️ Calculate BMI
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'articles' %}" class="btn btn-outline-info w-100">
+                            📰 Read Articles
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warnings Section -->
+    {% if warnings %}
+    <div class="col-12 mb-4">
+        <div class="alert alert-warning">
+            <h5>⚠️ Daily Warnings</h5>
+            <ul class="mb-0">
+                {% for warning in warnings %}
+                <li>{{ warning }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Today's Summary -->
+    <div class="col-lg-8 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">📊 Today's Nutrition Summary</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-primary">
+                            <div class="card-body">
+                                <h6 class="text-muted">Calories</h6>
+                                <h3>{{ summary.total_calories }}</h3>
+                                <small>of {{ profile.daily_calorie_goal }}</small>
+                                <div class="progress mt-2" style="height: 8px;">
+                                    <div class="progress-bar bg-primary" 
+                                         style="width: {{ progress.calories }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-success">
+                            <div class="card-body">
+                                <h6 class="text-muted">Protein</h6>
+                                <h3>{{ summary.total_protein }}g</h3>
+                                <small>of {{ profile.daily_protein_goal }}g</small>
+                                <div class="progress mt-2" style="height: 8px;">
+                                    <div class="progress-bar bg-success" 
+                                         style="width: {{ progress.protein }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-warning">
+                            <div class="card-body">
+                                <h6 class="text-muted">Carbs</h6>
+                                <h3>{{ summary.total_carbs }}g</h3>
+                                <small>of {{ profile.daily_carbs_goal }}g</small>
+                                <div class="progress mt-2" style="height: 8px;">
+                                    <div class="progress-bar bg-warning" 
+                                         style="width: {{ progress.carbs }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-danger">
+                            <div class="card-body">
+                                <h6 class="text-muted">Fat</h6>
+                                <h3>{{ summary.total_fat }}g</h3>
+                                <small>of {{ profile.daily_fat_goal }}g</small>
+                                <div class="progress mt-2" style="height: 8px;">
+                                    <div class="progress-bar bg-danger" 
+                                         style="width: {{ progress.fat }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Today's Meals -->
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">🍽️ Today's Meals ({{ meals_today.count }})</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    {% for meal in meals_today %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ meal.get_meal_type_display }}</strong>
+                                <p class="mb-0 small">{{ meal.food_name }}</p>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-primary">{{ meal.calories }} cal</span>
+                                <a href="{% url 'delete_meal' meal.id %}" 
+                                   class="btn btn-sm btn-outline-danger ms-2" 
+                                   onclick="return confirm('Delete this meal?')">
+                                    ×
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="list-group-item text-center py-4">
+                        <p class="text-muted mb-0">No meals logged today</p>
+                        <a href="{% url 'add_meal' %}" class="btn btn-sm btn-success mt-2">
+                            Add Your First Meal
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="col-12 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">📈 Weekly Nutrition Trends</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <canvas id="calorieChart" height="250"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <canvas id="nutrientChart" height="250"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Prepare data for charts
+const weekLabels = [{% for day in week_data %}"{{ day.date }}",{% endfor %}];
+const caloriesData = [{% for day in week_data %}{{ day.calories }},{% endfor %}];
+const proteinData = [{% for day in week_data %}{{ day.protein }},{% endfor %}];
+const carbsData = [{% for day in week_data %}{{ day.carbs }},{% endfor %}];
+const fatData = [{% for day in week_data %}{{ day.fat }},{% endfor %}];
+
+// Calorie Chart
+const calorieCtx = document.getElementById('calorieChart').getContext('2d');
+const calorieChart = new Chart(calorieCtx, {
+    type: 'bar',
+    data: {
+        labels: weekLabels,
+        datasets: [{
+            label: 'Calories',
+            data: caloriesData,
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            title: {
+                display: true,
+                text: 'Daily Calories'
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Calories'
+                }
+            }
+        }
+    }
+});
+
+// Nutrient Chart
+const nutrientCtx = document.getElementById('nutrientChart').getContext('2d');
+const nutrientChart = new Chart(nutrientCtx, {
+    type: 'line',
+    data: {
+        labels: weekLabels,
+        datasets: [
+            {
+                label: 'Protein (g)',
+                data: proteinData,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.4
+            },
+            {
+                label: 'Carbs (g)',
+                data: carbsData,
+                borderColor: 'rgba(255, 206, 86, 1)',
+                backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                tension: 0.4
+            },
+            {
+                label: 'Fat (g)',
+                data: fatData,
+                borderColor: 'rgba(255, 99, 132, 1)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                tension: 0.4
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            title: {
+                display: true,
+                text: 'Daily Nutrients'
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Grams (g)'
+                }
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

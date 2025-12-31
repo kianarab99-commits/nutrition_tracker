@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}Add Meal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">➕ Add New Meal</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Meal Type</label>
+                            {{ form.meal_type }}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Food Name</label>
+                            {{ form.food_name }}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Calories</label>
+                            {{ form.calories }}
+                            <small class="text-muted">Total calories</small>
+                        </div>
+                        
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Protein (g)</label>
+                            {{ form.protein }}
+                        </div>
+                        
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Carbs (g)</label>
+                            {{ form.carbohydrates }}
+                        </div>
+                        
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Fat (g)</label>
+                            {{ form.fat }}
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            Save Meal
+                        </button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary btn-lg">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Example Foods -->
+        <div class="card shadow mt-4">
+            <div class="card-header bg-light">
+                <h6 class="mb-0">📋 Common Food Examples</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Breakfast Examples:</strong></p>
+                        <ul>
+                            <li>2 eggs (140 cal, 12g protein, 1g carbs, 10g fat)</li>
+                            <li>Oatmeal (150 cal, 5g protein, 27g carbs, 3g fat)</li>
+                            <li>Banana (105 cal, 1g protein, 27g carbs, 0g fat)</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Lunch Examples:</strong></p>
+                        <ul>
+                            <li>Grilled chicken (165 cal, 31g protein, 0g carbs, 4g fat)</li>
+                            <li>Brown rice (215 cal, 5g protein, 45g carbs, 2g fat)</li>
+                            <li>Salad with dressing (100 cal, 2g protein, 8g carbs, 7g fat)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
